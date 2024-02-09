@@ -141,6 +141,309 @@ export class AccountServiceProxy {
 }
 
 @Injectable()
+export class CollegeServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: number | undefined): Observable<CollegeDto> {
+        let url_ = this.baseUrl + "/api/services/app/College/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<CollegeDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CollegeDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<CollegeDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CollegeDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CollegeDto>(<any>null);
+    }
+
+    /**
+     * @param keyword (optional) 
+     * @param isActive (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(keyword: string | undefined, isActive: boolean | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CollegeDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/College/GetAll?";
+        if (keyword === null)
+            throw new Error("The parameter 'keyword' cannot be null.");
+        else if (keyword !== undefined)
+            url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&";
+        if (isActive === null)
+            throw new Error("The parameter 'isActive' cannot be null.");
+        else if (isActive !== undefined)
+            url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<CollegeDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CollegeDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<CollegeDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CollegeDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CollegeDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: CreateCollegeDto | undefined): Observable<CollegeDto> {
+        let url_ = this.baseUrl + "/api/services/app/College/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<CollegeDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CollegeDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<CollegeDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CollegeDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CollegeDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: UpdateCollegeDto | undefined): Observable<CollegeDto> {
+        let url_ = this.baseUrl + "/api/services/app/College/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<CollegeDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CollegeDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<CollegeDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CollegeDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CollegeDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/College/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class ConfigurationServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -2602,6 +2905,215 @@ export interface IChangeUserLanguageDto {
     languageName: string;
 }
 
+export class CollegeDto implements ICollegeDto {
+    id: number;
+    collegeID: string | undefined;
+    name: string | undefined;
+    address: string | undefined;
+    description: string | undefined;
+    gpsLatitude: number;
+    gpsLongitude: number;
+    contactEmail: string | undefined;
+    isActive: boolean;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+
+    constructor(data?: ICollegeDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.collegeID = _data["collegeID"];
+            this.name = _data["name"];
+            this.address = _data["address"];
+            this.description = _data["description"];
+            this.gpsLatitude = _data["gpsLatitude"];
+            this.gpsLongitude = _data["gpsLongitude"];
+            this.contactEmail = _data["contactEmail"];
+            this.isActive = _data["isActive"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+        }
+    }
+
+    static fromJS(data: any): CollegeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CollegeDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["collegeID"] = this.collegeID;
+        data["name"] = this.name;
+        data["address"] = this.address;
+        data["description"] = this.description;
+        data["gpsLatitude"] = this.gpsLatitude;
+        data["gpsLongitude"] = this.gpsLongitude;
+        data["contactEmail"] = this.contactEmail;
+        data["isActive"] = this.isActive;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        return data; 
+    }
+
+    clone(): CollegeDto {
+        const json = this.toJSON();
+        let result = new CollegeDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICollegeDto {
+    id: number;
+    collegeID: string | undefined;
+    name: string | undefined;
+    address: string | undefined;
+    description: string | undefined;
+    gpsLatitude: number;
+    gpsLongitude: number;
+    contactEmail: string | undefined;
+    isActive: boolean;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+}
+
+export class CollegeDtoPagedResultDto implements ICollegeDtoPagedResultDto {
+    items: CollegeDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: ICollegeDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(CollegeDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): CollegeDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CollegeDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): CollegeDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new CollegeDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICollegeDtoPagedResultDto {
+    items: CollegeDto[] | undefined;
+    totalCount: number;
+}
+
+export class CreateCollegeDto implements ICreateCollegeDto {
+    collegeID: string | undefined;
+    name: string | undefined;
+    address: string | undefined;
+    description: string | undefined;
+    gpsLatitude: number;
+    gpsLongitude: number;
+    contactEmail: string | undefined;
+    isActive: boolean;
+
+    constructor(data?: ICreateCollegeDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.collegeID = _data["collegeID"];
+            this.name = _data["name"];
+            this.address = _data["address"];
+            this.description = _data["description"];
+            this.gpsLatitude = _data["gpsLatitude"];
+            this.gpsLongitude = _data["gpsLongitude"];
+            this.contactEmail = _data["contactEmail"];
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): CreateCollegeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCollegeDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["collegeID"] = this.collegeID;
+        data["name"] = this.name;
+        data["address"] = this.address;
+        data["description"] = this.description;
+        data["gpsLatitude"] = this.gpsLatitude;
+        data["gpsLongitude"] = this.gpsLongitude;
+        data["contactEmail"] = this.contactEmail;
+        data["isActive"] = this.isActive;
+        return data; 
+    }
+
+    clone(): CreateCollegeDto {
+        const json = this.toJSON();
+        let result = new CreateCollegeDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateCollegeDto {
+    collegeID: string | undefined;
+    name: string | undefined;
+    address: string | undefined;
+    description: string | undefined;
+    gpsLatitude: number;
+    gpsLongitude: number;
+    contactEmail: string | undefined;
+    isActive: boolean;
+}
+
 export class CreateRoleDto implements ICreateRoleDto {
     name: string;
     displayName: string;
@@ -2675,6 +3187,7 @@ export class CreateStudentDto implements ICreateStudentDto {
     address: string | undefined;
     programName: string | undefined;
     doB: string | undefined;
+    collegeID: string | undefined;
     isActive: boolean;
 
     constructor(data?: ICreateStudentDto) {
@@ -2693,6 +3206,7 @@ export class CreateStudentDto implements ICreateStudentDto {
             this.address = _data["address"];
             this.programName = _data["programName"];
             this.doB = _data["doB"];
+            this.collegeID = _data["collegeID"];
             this.isActive = _data["isActive"];
         }
     }
@@ -2711,6 +3225,7 @@ export class CreateStudentDto implements ICreateStudentDto {
         data["address"] = this.address;
         data["programName"] = this.programName;
         data["doB"] = this.doB;
+        data["collegeID"] = this.collegeID;
         data["isActive"] = this.isActive;
         return data; 
     }
@@ -2729,6 +3244,7 @@ export interface ICreateStudentDto {
     address: string | undefined;
     programName: string | undefined;
     doB: string | undefined;
+    collegeID: string | undefined;
     isActive: boolean;
 }
 
@@ -3941,6 +4457,7 @@ export class StudentDto implements IStudentDto {
     address: string | undefined;
     programName: string | undefined;
     doB: string | undefined;
+    collegeID: string | undefined;
     isActive: boolean;
     creationTime: moment.Moment;
     creatorUserId: number | undefined;
@@ -3962,6 +4479,7 @@ export class StudentDto implements IStudentDto {
             this.address = _data["address"];
             this.programName = _data["programName"];
             this.doB = _data["doB"];
+            this.collegeID = _data["collegeID"];
             this.isActive = _data["isActive"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.creatorUserId = _data["creatorUserId"];
@@ -3983,6 +4501,7 @@ export class StudentDto implements IStudentDto {
         data["address"] = this.address;
         data["programName"] = this.programName;
         data["doB"] = this.doB;
+        data["collegeID"] = this.collegeID;
         data["isActive"] = this.isActive;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["creatorUserId"] = this.creatorUserId;
@@ -4004,6 +4523,7 @@ export interface IStudentDto {
     address: string | undefined;
     programName: string | undefined;
     doB: string | undefined;
+    collegeID: string | undefined;
     isActive: boolean;
     creationTime: moment.Moment;
     creatorUserId: number | undefined;
@@ -4231,6 +4751,81 @@ export interface ITenantLoginInfoDto {
     name: string | undefined;
 }
 
+export class UpdateCollegeDto implements IUpdateCollegeDto {
+    id: number;
+    collegeID: string | undefined;
+    name: string | undefined;
+    address: string | undefined;
+    description: string | undefined;
+    gpsLatitude: number;
+    gpsLongitude: number;
+    contactEmail: string | undefined;
+    isActive: boolean;
+
+    constructor(data?: IUpdateCollegeDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.collegeID = _data["collegeID"];
+            this.name = _data["name"];
+            this.address = _data["address"];
+            this.description = _data["description"];
+            this.gpsLatitude = _data["gpsLatitude"];
+            this.gpsLongitude = _data["gpsLongitude"];
+            this.contactEmail = _data["contactEmail"];
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): UpdateCollegeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCollegeDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["collegeID"] = this.collegeID;
+        data["name"] = this.name;
+        data["address"] = this.address;
+        data["description"] = this.description;
+        data["gpsLatitude"] = this.gpsLatitude;
+        data["gpsLongitude"] = this.gpsLongitude;
+        data["contactEmail"] = this.contactEmail;
+        data["isActive"] = this.isActive;
+        return data; 
+    }
+
+    clone(): UpdateCollegeDto {
+        const json = this.toJSON();
+        let result = new UpdateCollegeDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateCollegeDto {
+    id: number;
+    collegeID: string | undefined;
+    name: string | undefined;
+    address: string | undefined;
+    description: string | undefined;
+    gpsLatitude: number;
+    gpsLongitude: number;
+    contactEmail: string | undefined;
+    isActive: boolean;
+}
+
 export class UpdateStudentDto implements IUpdateStudentDto {
     id: number;
     firstName: string | undefined;
@@ -4238,6 +4833,7 @@ export class UpdateStudentDto implements IUpdateStudentDto {
     address: string | undefined;
     programName: string | undefined;
     doB: string | undefined;
+    collegeID: string | undefined;
     isActive: boolean;
 
     constructor(data?: IUpdateStudentDto) {
@@ -4257,6 +4853,7 @@ export class UpdateStudentDto implements IUpdateStudentDto {
             this.address = _data["address"];
             this.programName = _data["programName"];
             this.doB = _data["doB"];
+            this.collegeID = _data["collegeID"];
             this.isActive = _data["isActive"];
         }
     }
@@ -4276,6 +4873,7 @@ export class UpdateStudentDto implements IUpdateStudentDto {
         data["address"] = this.address;
         data["programName"] = this.programName;
         data["doB"] = this.doB;
+        data["collegeID"] = this.collegeID;
         data["isActive"] = this.isActive;
         return data; 
     }
@@ -4295,6 +4893,7 @@ export interface IUpdateStudentDto {
     address: string | undefined;
     programName: string | undefined;
     doB: string | undefined;
+    collegeID: string | undefined;
     isActive: boolean;
 }
 
