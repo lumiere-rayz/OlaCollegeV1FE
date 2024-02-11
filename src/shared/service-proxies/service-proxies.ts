@@ -2907,7 +2907,6 @@ export interface IChangeUserLanguageDto {
 
 export class CollegeDto implements ICollegeDto {
     id: number;
-    collegeID: string | undefined;
     name: string | undefined;
     address: string | undefined;
     description: string | undefined;
@@ -2930,7 +2929,6 @@ export class CollegeDto implements ICollegeDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.collegeID = _data["collegeID"];
             this.name = _data["name"];
             this.address = _data["address"];
             this.description = _data["description"];
@@ -2953,7 +2951,6 @@ export class CollegeDto implements ICollegeDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["collegeID"] = this.collegeID;
         data["name"] = this.name;
         data["address"] = this.address;
         data["description"] = this.description;
@@ -2976,7 +2973,6 @@ export class CollegeDto implements ICollegeDto {
 
 export interface ICollegeDto {
     id: number;
-    collegeID: string | undefined;
     name: string | undefined;
     address: string | undefined;
     description: string | undefined;
@@ -3044,7 +3040,6 @@ export interface ICollegeDtoPagedResultDto {
 }
 
 export class CreateCollegeDto implements ICreateCollegeDto {
-    collegeID: string | undefined;
     name: string | undefined;
     address: string | undefined;
     description: string | undefined;
@@ -3064,7 +3059,6 @@ export class CreateCollegeDto implements ICreateCollegeDto {
 
     init(_data?: any) {
         if (_data) {
-            this.collegeID = _data["collegeID"];
             this.name = _data["name"];
             this.address = _data["address"];
             this.description = _data["description"];
@@ -3084,7 +3078,6 @@ export class CreateCollegeDto implements ICreateCollegeDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["collegeID"] = this.collegeID;
         data["name"] = this.name;
         data["address"] = this.address;
         data["description"] = this.description;
@@ -3104,7 +3097,6 @@ export class CreateCollegeDto implements ICreateCollegeDto {
 }
 
 export interface ICreateCollegeDto {
-    collegeID: string | undefined;
     name: string | undefined;
     address: string | undefined;
     description: string | undefined;
@@ -3187,7 +3179,7 @@ export class CreateStudentDto implements ICreateStudentDto {
     address: string | undefined;
     programName: string | undefined;
     doB: string | undefined;
-    collegeID: string | undefined;
+    collegeId: number;
     isActive: boolean;
 
     constructor(data?: ICreateStudentDto) {
@@ -3206,7 +3198,7 @@ export class CreateStudentDto implements ICreateStudentDto {
             this.address = _data["address"];
             this.programName = _data["programName"];
             this.doB = _data["doB"];
-            this.collegeID = _data["collegeID"];
+            this.collegeId = _data["collegeId"];
             this.isActive = _data["isActive"];
         }
     }
@@ -3225,7 +3217,7 @@ export class CreateStudentDto implements ICreateStudentDto {
         data["address"] = this.address;
         data["programName"] = this.programName;
         data["doB"] = this.doB;
-        data["collegeID"] = this.collegeID;
+        data["collegeId"] = this.collegeId;
         data["isActive"] = this.isActive;
         return data; 
     }
@@ -3244,7 +3236,7 @@ export interface ICreateStudentDto {
     address: string | undefined;
     programName: string | undefined;
     doB: string | undefined;
-    collegeID: string | undefined;
+    collegeId: number;
     isActive: boolean;
 }
 
@@ -4457,7 +4449,7 @@ export class StudentDto implements IStudentDto {
     address: string | undefined;
     programName: string | undefined;
     doB: string | undefined;
-    collegeID: string | undefined;
+    collegeId: number;
     isActive: boolean;
     creationTime: moment.Moment;
     creatorUserId: number | undefined;
@@ -4479,7 +4471,7 @@ export class StudentDto implements IStudentDto {
             this.address = _data["address"];
             this.programName = _data["programName"];
             this.doB = _data["doB"];
-            this.collegeID = _data["collegeID"];
+            this.collegeId = _data["collegeId"];
             this.isActive = _data["isActive"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.creatorUserId = _data["creatorUserId"];
@@ -4501,7 +4493,7 @@ export class StudentDto implements IStudentDto {
         data["address"] = this.address;
         data["programName"] = this.programName;
         data["doB"] = this.doB;
-        data["collegeID"] = this.collegeID;
+        data["collegeId"] = this.collegeId;
         data["isActive"] = this.isActive;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["creatorUserId"] = this.creatorUserId;
@@ -4523,7 +4515,7 @@ export interface IStudentDto {
     address: string | undefined;
     programName: string | undefined;
     doB: string | undefined;
-    collegeID: string | undefined;
+    collegeId: number;
     isActive: boolean;
     creationTime: moment.Moment;
     creatorUserId: number | undefined;
@@ -4753,7 +4745,6 @@ export interface ITenantLoginInfoDto {
 
 export class UpdateCollegeDto implements IUpdateCollegeDto {
     id: number;
-    collegeID: string | undefined;
     name: string | undefined;
     address: string | undefined;
     description: string | undefined;
@@ -4774,7 +4765,6 @@ export class UpdateCollegeDto implements IUpdateCollegeDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.collegeID = _data["collegeID"];
             this.name = _data["name"];
             this.address = _data["address"];
             this.description = _data["description"];
@@ -4795,7 +4785,6 @@ export class UpdateCollegeDto implements IUpdateCollegeDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["collegeID"] = this.collegeID;
         data["name"] = this.name;
         data["address"] = this.address;
         data["description"] = this.description;
@@ -4816,7 +4805,6 @@ export class UpdateCollegeDto implements IUpdateCollegeDto {
 
 export interface IUpdateCollegeDto {
     id: number;
-    collegeID: string | undefined;
     name: string | undefined;
     address: string | undefined;
     description: string | undefined;
@@ -4833,7 +4821,7 @@ export class UpdateStudentDto implements IUpdateStudentDto {
     address: string | undefined;
     programName: string | undefined;
     doB: string | undefined;
-    collegeID: string | undefined;
+    collegeId: number;
     isActive: boolean;
 
     constructor(data?: IUpdateStudentDto) {
@@ -4853,7 +4841,7 @@ export class UpdateStudentDto implements IUpdateStudentDto {
             this.address = _data["address"];
             this.programName = _data["programName"];
             this.doB = _data["doB"];
-            this.collegeID = _data["collegeID"];
+            this.collegeId = _data["collegeId"];
             this.isActive = _data["isActive"];
         }
     }
@@ -4873,7 +4861,7 @@ export class UpdateStudentDto implements IUpdateStudentDto {
         data["address"] = this.address;
         data["programName"] = this.programName;
         data["doB"] = this.doB;
-        data["collegeID"] = this.collegeID;
+        data["collegeId"] = this.collegeId;
         data["isActive"] = this.isActive;
         return data; 
     }
@@ -4893,7 +4881,7 @@ export interface IUpdateStudentDto {
     address: string | undefined;
     programName: string | undefined;
     doB: string | undefined;
-    collegeID: string | undefined;
+    collegeId: number;
     isActive: boolean;
 }
 

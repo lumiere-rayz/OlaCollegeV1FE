@@ -39,6 +39,15 @@ import { SidebarLogoComponent } from './layout/sidebar-logo.component';
 import { SidebarUserPanelComponent } from './layout/sidebar-user-panel.component';
 import { SidebarMenuComponent } from './layout/sidebar-menu.component';
 
+//college
+import { CollegesComponent } from '@app/colleges/colleges.component';
+import { CreateCollegeDialogComponent } from './colleges/create-college/create-college-dialog.component';
+import { EditCollegeDialogComponent } from './colleges/edit-college/edit-college-dialog.component';
+
+// students
+import { StudentsComponent } from '@app/students/students.component';
+import { CreateStudentDialogComponent } from './students/create-student/create-student-dialog.component';
+import { EditStudentDialogComponent } from './students/edit-student/edit-student-dialog.component';
 
 
 @NgModule({
@@ -70,6 +79,14 @@ import { SidebarMenuComponent } from './layout/sidebar-menu.component';
     SidebarLogoComponent,
     SidebarUserPanelComponent,
     SidebarMenuComponent
+    // colleges
+    ,CollegesComponent
+    ,CreateCollegeDialogComponent
+    ,EditCollegeDialogComponent
+    // students
+    ,StudentsComponent
+    ,CreateStudentDialogComponent
+    ,EditStudentDialogComponent
   ],
   imports: [
     CommonModule,
